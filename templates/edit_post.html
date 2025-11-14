@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="col-lg-8 mx-auto">
+    <div class="glass-form p-5 rounded-4">
+        <p class="text-uppercase text-accent small fw-semibold mb-2">Update</p>
+        <h2 class="fw-semibold mb-4">Polish this flavor story</h2>
+        <form method="post">
+            <div class="mb-4">
+                <label class="form-label">Title</label>
+                <input type="text" name="title" class="form-control form-control-lg" value="{{ post.title }}" required>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Summary</label>
+                <input type="text" name="summary" class="form-control" maxlength="200" value="{{ post.summary }}" required>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Full story / recipe</label>
+                <textarea name="content" rows="7" class="form-control" required>{{ post.content }}</textarea>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Image URL</label>
+                    <input type="url" name="image_url" class="form-control" value="{{ post.image_url }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Category</label>
+                    <input type="text" name="category" class="form-control" value="{{ post.category }}">
+                </div>
+            </div>
+            <div class="d-flex gap-3">
+                <button class="btn btn-primary px-4" type="submit">Save changes</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('post_detail', post_id=post.id) }}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

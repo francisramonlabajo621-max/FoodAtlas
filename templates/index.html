@@ -1,0 +1,73 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<section class="hero glassy mb-5 p-5 rounded-4 text-center text-lg-start">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <p class="text-uppercase text-accent fw-semibold small mb-2">Flavor journal</p>
+            <h1 class="display-5 fw-semibold mb-3">Discover plates worth daydreaming about</h1>
+            <p class="lead mb-4">Stories, recipes, and travel bites from kitchens around the globe. Search the archive or add your own creation.</p>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('add_post') }}" class="btn btn-primary btn-lg shadow">Share a Food Story</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg shadow">Log in to Share</a>
+            {% endif %}
+        </div>
+        <div class="col-lg-5 text-center">
+            <div class="floating-card">
+                <span class="badge bg-primary-subtle text-primary mb-3">New</span>
+                <h5 class="fw-semibold">Seasonal tasting menu</h5>
+                <p class="text-muted mb-0">We just added spring-inspired recipes with edible blooms and citrus.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<form method="get" class="search-card glassy p-4 rounded-4 mb-4">
+    <div class="row g-3 align-items-center">
+        <div class="col-md-9">
+            <label class="form-label text-uppercase small text-muted">Search the pantry</label>
+            <input type="text" class="form-control form-control-lg" name="q" placeholder="Try 'ramen', 'citrus', or 'grill'" value="{{ query }}">
+        </div>
+        <div class="col-md-3 d-grid">
+            <label class="form-label opacity-0">Search</label>
+            <button type="submit" class="btn btn-dark btn-lg">Find flavors</button>
+        </div>
+    </div>
+</form>
+
+{% if categories %}
+<div class="category-chip-stack mb-4">
+    <a href="{{ url_for('index') }}" class="category-chip {{ not category and 'active' }}">All</a>
+    {% for cat in categories %}
+    <a href="{{ url_for('index', category=cat) }}" class="category-chip {{ category == cat and 'active' }}">{{ cat }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<section class="row g-4">
+    {% if posts %}
+        {% for post in posts %}
+        <div class="col-md-6 col-xxl-4 d-flex">
+            <article class="post-card flex-fill">
+                <div class="post-thumb" style="background-image: url('{{ post.hero_image() }}');"></div>
+                <div class="post-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <a class="badge rounded-pill bg-dark-subtle text-dark small text-decoration-none" href="{{ url_for('index', category=post.category) }}">{{ post.category or 'Chef notes' }}</a>
+                        <small class="text-muted">{{ post.date_posted.strftime('%b %d, %Y') }}</small>
+                    </div>
+                    <small class="text-muted mb-1 d-block">By {{ post.author.username if post.author else 'Guest' }}</small>
+                    <h3 class="h5 mb-2">{{ post.title }}</h3>
+                    <p class="text-muted mb-3">{{ post.summary }}</p>
+                    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('post_detail', post_id=post.id) }}">Read story</a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12 text-center py-5">
+            <h3>No dishes found.</h3>
+            <p class="text-muted">Try another ingredient or <a href="/add">share something delicious</a>.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
